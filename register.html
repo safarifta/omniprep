@@ -16,10 +16,7 @@
 <meta name="twitter:title" content="Register — OmniPrep" />
 <meta name="twitter:description" content="Create your OmniPrep account. ₦1,999/year. Full JAMB CBT training suite." />
   <link rel="stylesheet" href="css/style.css" />
-  <script src="https://js.paystack.co/v1/inline.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    emailjs.init('REPLACE_WITH_YOUR_EMAILJS_PUBLIC_KEY');
   </script>
 
   <!-- Firebase bridge for registration -->
@@ -257,24 +254,25 @@
     </div>
     <!-- /step-1 -->
 
-    <!-- STEP 2: PAYMENT -->
+    <!-- STEP 2: CREATE ACCOUNT -->
     <div class="form-step" id="step-2">
 
       <div>
-        <div class="form-header__title">Complete your payment</div>
+        <div class="form-header__title">Almost done!</div>
         <div class="form-header__sub">
-          Review your details and pay securely via Paystack.
-          Your account is created automatically after payment.
+          Review your details below. OmniPrep is completely free —
+          no payment required.
         </div>
       </div>
 
-      <!-- Order summary -->
+      <!-- Review summary -->
       <div class="payment-summary">
         <div class="payment-summary__row">
-          <span>OmniPrep Annual Access</span><span>₦1,999.00</span>
+          <span>Name</span>
+          <span id="pay-name-display" style="font-weight:600">—</span>
         </div>
         <div class="payment-summary__row">
-          <span>Your email</span>
+          <span>Email</span>
           <span id="pay-email-display" style="font-family:var(--mono);font-size:12px">—</span>
         </div>
         <div class="payment-summary__row">
@@ -282,40 +280,43 @@
           <span id="pay-subjects-display" style="font-size:12px;text-align:right;max-width:200px">—</span>
         </div>
         <div class="payment-summary__row">
-          <span>Access duration</span><span>1 year</span>
+          <span>UTME Year</span>
+          <span id="pay-year-display">—</span>
         </div>
         <div class="payment-summary__row total">
-          <span>Total</span><span>₦1,999</span>
+          <span>Access</span>
+          <span style="color:var(--green);font-family:var(--mono);font-size:18px">FREE</span>
         </div>
       </div>
 
-      <!-- What happens after payment -->
+      <!-- Free badge -->
       <div style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:var(--radius);padding:var(--space-4) var(--space-5)">
-        <div style="font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:var(--space-2)">✅ What happens after payment</div>
+        <div style="font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:var(--space-2)">✅ OmniPrep is completely free</div>
         <div style="font-size:13px;color:var(--green-dark);line-height:1.7">
-          Your account is created automatically and you can log in immediately. No waiting. No manual approval needed.
+          No payment required. Your account is created immediately.
+          You can log in right after registering.
         </div>
       </div>
 
-      <!-- Pay button -->
+      <!-- CunkPay sponsor badge -->
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4) var(--space-5);display:flex;align-items:center;gap:var(--space-4)">
+        <div style="font-size:28px">💳</div>
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-4);margin-bottom:3px">Sponsored by</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-0.01em">CunkPay</div>
+          <div style="font-size:12px;color:var(--ink-3);margin-top:2px">Earn money completing simple tasks online</div>
+        </div>
+        <a href="https://cunkpay.com" target="_blank" style="margin-left:auto;font-size:12px;font-weight:700;color:var(--green);white-space:nowrap">Learn more →</a>
+      </div>
+
+      <!-- Create account button -->
       <button
         class="btn btn-primary btn-lg btn-block"
         id="pay-btn"
-        onclick="initiatePayment()"
+        onclick="createAccount()"
       >
-        🔒 Pay ₦1,999 with Paystack
+        Create my free account →
       </button>
-
-      <!-- Payment methods -->
-      <div class="paystack-secure">
-        🔒 Secured by Paystack
-      </div>
-      <div class="pay-methods">
-        <span class="pay-method-pill">💳 Debit Card</span>
-        <span class="pay-method-pill">🏦 Bank Transfer</span>
-        <span class="pay-method-pill">📱 USSD</span>
-        <span class="pay-method-pill">📲 Mobile Money</span>
-      </div>
 
       <button class="btn btn-secondary btn-block" onclick="goBack()">
         ← Go back and edit details
@@ -327,12 +328,12 @@
     <!-- SUCCESS SCREEN -->
     <div class="success-screen" id="success-screen">
       <div class="success-icon">✓</div>
-      <h2 class="text-h2 mb-3">Payment confirmed!</h2>
+      <h2 class="text-h2 mb-3">Welcome to OmniPrep!</h2>
       <p class="text-body mb-3">
-        Welcome to OmniPrep, <strong id="success-name"></strong>!
+        Account created, <strong id="success-name"></strong>!
       </p>
       <p class="text-body mb-6">
-        Your account has been created. You can log in immediately with your email and password.
+        You can log in immediately. OmniPrep is free for life — powered by CunkPay.
       </p>
       <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-5);margin-bottom:var(--space-6);text-align:left">
         <div style="font-size:12px;font-weight:700;color:var(--ink-3);margin-bottom:var(--space-3)">YOUR ACCOUNT DETAILS</div>
@@ -418,10 +419,21 @@
 <!-- ══════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════ -->
-<script>
-  const PAYSTACK_PUBLIC_KEY = 'pk_live_1a18baec31cf0f535ac42d5db9cb1fcaaf0775a1';
-  const AMOUNT_KOBO         = 199900; // ₦1,999 in kobo
 
+<!-- Firebase bridge -->
+<script type="module">
+  import {
+    auth, db,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    doc, setDoc,
+    serverTimestamp,
+  } from './js/firebase.js';
+  window._fb_create = { auth, db, createUserWithEmailAndPassword, updateProfile, doc, setDoc, serverTimestamp };
+  console.log('Firebase ready.');
+</script>
+
+<script>
   const formData = { name:'', email:'', password:'', year:'', date:'', subjects:[] };
 
   // ── SUBJECT CHECKBOXES ──
@@ -451,10 +463,10 @@
     const input = document.getElementById(id.replace('err-', 'reg-'));
     if (input) input.classList.remove('error');
   }
-  function showAlert(msg) {
+  function showAlert(msg, type='error') {
     const el = document.getElementById('form-alert');
     el.textContent = msg;
-    el.className = 'form-alert error show';
+    el.className = `form-alert ${type} show`;
     el.scrollIntoView({ behavior:'smooth', block:'center' });
   }
   function hideAlert() {
@@ -493,8 +505,15 @@
       ...Array.from(document.querySelectorAll('#subject-grid input:checked')).map(c => c.value),
     ];
 
-    document.getElementById('pay-email-display').textContent    = formData.email;
-    document.getElementById('pay-subjects-display').textContent = formData.subjects.join(', ');
+    // Populate review screen
+    const nameEl = document.getElementById('pay-name-display');
+    const emailEl = document.getElementById('pay-email-display');
+    const subjEl  = document.getElementById('pay-subjects-display');
+    const yearEl  = document.getElementById('pay-year-display');
+    if (nameEl) nameEl.textContent = formData.name;
+    if (emailEl) emailEl.textContent = formData.email;
+    if (subjEl)  subjEl.textContent  = formData.subjects.join(', ');
+    if (yearEl)  yearEl.textContent  = formData.year;
 
     document.getElementById('step-1').classList.remove('active');
     document.getElementById('step-2').classList.add('active');
@@ -515,94 +534,84 @@
     window.scrollTo({ top:0, behavior:'smooth' });
   }
 
-  // ── PAYSTACK PAYMENT ──
-  function initiatePayment() {
+  // ── CREATE ACCOUNT (FREE — NO PAYMENT) ──
+  async function createAccount() {
     const btn = document.getElementById('pay-btn');
     btn.disabled    = true;
-    btn.textContent = 'Opening Paystack...';
-
-    const handler = PaystackPop.setup({
-      key:       PAYSTACK_PUBLIC_KEY,
-      email:     formData.email,
-      amount:    AMOUNT_KOBO,
-      currency:  'NGN',
-      ref:       'OP-' + Date.now() + '-' + Math.floor(Math.random() * 1000000),
-      metadata: {
-        custom_fields: [
-          { display_name: 'Student Name',    variable_name: 'student_name',    value: formData.name },
-          { display_name: 'Subjects',        variable_name: 'subjects',        value: formData.subjects.join(', ') },
-          { display_name: 'UTME Year',       variable_name: 'exam_year',       value: formData.year },
-        ],
-      },
-      callback: function(response) {
-        // Payment successful — create account automatically
-        onPaymentSuccess(response.reference);
-      },
-      onClose: function() {
-        btn.disabled    = false;
-        btn.textContent = '🔒 Pay ₦1,999 with Paystack';
-      },
-    });
-
-    handler.openIframe();
-  }
-
-  // ── ON PAYMENT SUCCESS ──
-  async function onPaymentSuccess(paystackRef) {
-    const btn = document.getElementById('pay-btn');
     btn.textContent = '⏳ Creating your account...';
 
-    try {
-      // 1. Save to Firestore pending_registrations with payment reference
-      if (window._fb_reg) {
-        const { db, collection, addDoc, serverTimestamp } = window._fb_reg;
-        await addDoc(collection(db, 'pending_registrations'), {
-          name:         formData.name,
-          email:        formData.email,
-          password:     formData.password,
-          examYear:     formData.year,
-          examDate:     formData.date,
-          subjects:     formData.subjects,
-          status:       'paid',
-          paystackRef:  paystackRef,
-          createdAt:    serverTimestamp(),
-        });
-        console.log('Registration saved to Firestore with Paystack ref:', paystackRef);
-      }
-
-      // 2. Send email notification
-      try {
-        await emailjs.send('service_omniprep', 'template_omniprep', {
-          student_name:     formData.name,
-          student_email:    formData.email,
-          student_subjects: formData.subjects.join(', '),
-          student_year:     formData.year,
-          student_date:     formData.date,
-          paystack_ref:     paystackRef,
-        });
-      } catch(e) {
-        console.warn('EmailJS notification failed:', e.message);
-      }
-
-    } catch(e) {
-      console.error('Firestore save error:', e.message);
+    // Wait for Firebase bridge
+    let attempts = 0;
+    while (!window._fb_create && attempts < 50) {
+      await new Promise(r => setTimeout(r, 100));
+      attempts++;
     }
 
-    // 3. Show success screen
-    document.getElementById('step-2').classList.remove('active');
-    document.getElementById('success-screen').classList.add('active');
-    document.getElementById('step-ind-2').classList.remove('active');
-    document.getElementById('step-ind-2').classList.add('done');
-    document.getElementById('connector-2').classList.add('done');
-    document.getElementById('step-ind-3').classList.add('active');
+    if (!window._fb_create) {
+      showAlert('Connection error. Please refresh and try again.');
+      btn.disabled    = false;
+      btn.textContent = 'Create my free account →';
+      return;
+    }
 
-    document.getElementById('success-name').textContent = formData.name.split(' ')[0];
-    document.getElementById('s-name').textContent       = formData.name;
-    document.getElementById('s-email').textContent      = formData.email;
-    document.getElementById('s-subjects').textContent   = formData.subjects.join(', ');
-    document.getElementById('s-year').textContent       = formData.year;
+    const {
+      auth, db,
+      createUserWithEmailAndPassword,
+      updateProfile,
+      doc, setDoc,
+      serverTimestamp,
+    } = window._fb_create;
 
-    window.scrollTo({ top:0, behavior:'smooth' });
+    try {
+      // 1. Create Firebase Auth account
+      const credential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user       = credential.user;
+
+      // 2. Set display name
+      await updateProfile(user, { displayName: formData.name });
+
+      // 3. Create Firestore student profile
+      await setDoc(doc(db, 'students', user.uid), {
+        uid:          user.uid,
+        name:         formData.name,
+        email:        formData.email,
+        examYear:     formData.year,
+        examDate:     formData.date,
+        subjects:     formData.subjects,
+        plan:         'free',
+        sponsor:      'CunkPay',
+        sessions:     [],
+        createdAt:    serverTimestamp(),
+      });
+
+      // 4. Show success
+      document.getElementById('step-2').classList.remove('active');
+      document.getElementById('success-screen').classList.add('active');
+      document.getElementById('step-ind-2').classList.remove('active');
+      document.getElementById('step-ind-2').classList.add('done');
+      document.getElementById('connector-2').classList.add('done');
+      document.getElementById('step-ind-3').classList.add('active');
+
+      document.getElementById('success-name').textContent = formData.name.split(' ')[0];
+      document.getElementById('s-name').textContent       = formData.name;
+      document.getElementById('s-email').textContent      = formData.email;
+      document.getElementById('s-subjects').textContent   = formData.subjects.join(', ');
+      document.getElementById('s-year').textContent       = formData.year;
+
+      window.scrollTo({ top:0, behavior:'smooth' });
+
+    } catch(e) {
+      console.error('Account creation error:', e);
+      btn.disabled    = false;
+      btn.textContent = 'Create my free account →';
+
+      let msg = 'Something went wrong. Please try again.';
+      if (e.code === 'auth/email-already-in-use') msg = 'This email is already registered. Please login instead.';
+      if (e.code === 'auth/invalid-email')         msg = 'Please enter a valid email address.';
+      if (e.code === 'auth/weak-password')          msg = 'Password must be at least 8 characters.';
+      if (e.code === 'auth/network-request-failed') msg = 'Network error. Check your internet connection.';
+      showAlert(msg);
+    }
   }
 </script>
 
