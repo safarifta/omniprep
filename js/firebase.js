@@ -90,20 +90,8 @@ async function requireAuth() {
     return null;
   }
 
-  const data   = snap.data();
-  const expiry = new Date(data.accessExpiry);
-  const now    = new Date();
-
-  if (expiry < now) {
-    sessionStorage.setItem('op_expired', '1');
-    sessionStorage.setItem('op_expiry_date', expiry.toLocaleDateString('en-GB', {
-      day: 'numeric', month: 'long', year: 'numeric',
-    }));
-    await signOut(auth);
-    window.location.href = 'login.html';
-    return null;
-  }
-
+  // OmniPrep is free — no expiry check needed
+  const data = snap.data();
   return { uid: user.uid, ...data };
 }
 
